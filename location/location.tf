@@ -168,7 +168,3 @@ resource "azurerm_lb_rule" "web_server_lb_http_rule" {
     probe_id                        = azurerm_lb_probe.web_server_lb_http_probe.id
     backend_address_pool_id         = azurerm_lb_backend_address_pool.web_server_lb_backend_pool.id
 }
-
-
-
-

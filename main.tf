@@ -50,3 +50,38 @@ module "location_eu1w" {
     domain_name_label           = var.domain_name_label
     terraform_script_version    = var.terraform_script_version
 }
+
+resource "azurerm_traffic_manager_profile" "traffic_manager" {
+    name                    = "${var.resource_prefix}-traffic-manager"
+    resource_group_name     = module.location_us2w.web_server_rg_name
+    traffic_routing_method  = "Weighted"
+
+    dns_config {
+        relative_name   = var.domain_name_label # Must be unique within Azure (global) 
+        ttl             = 100
+    }
+
+    monitor_config {
+        protocol    = "http"
+        port        = 80
+        path        = "/"
+    }
+}
+
+resource "azurerm_traffic_manager_endpoint" "traffic_manager_us2w" {
+    name                    = "${var.resource_prefix}-us2w-endpoint"
+    resource_group_name     = module.location_us2w.web_server_rg_name
+    profile_name            = azurerm_traffic_manager_profile.traffic_manager.name
+    target_resource_id      = module.location_us2w.web_server_lb_public_ip_id
+    type                    = "azureEndpoints"
+    weight                  = 100
+}
+
+resource "azurerm_traffic_manager_endpoint" "traffic_manager_eu1w" {
+    name                    = "${var.resource_prefix}-eu1w-endpoint"
+    resource_group_name     = module.location_us2w.web_server_rg_name # Must be us2w to find the lb in correct resource group
+    profile_name            = azurerm_traffic_manager_profile.traffic_manager.name
+    target_resource_id      = module.location_eu1w.web_server_lb_public_ip_id
+    type                    = "azureEndpoints"
+    weight                  = 100
+}
