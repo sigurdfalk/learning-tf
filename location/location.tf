@@ -10,6 +10,7 @@ variable "web_server_subnets" {
 }
 variable "terraform_script_version" {}
 variable "domain_name_label" {}
+variable "a_strong_pw" {}
 
 locals {
     web_server_name     = var.environment == "production" ? "${var.web_server_name}-prd" : "${var.web_server_name}-dev"
@@ -99,7 +100,7 @@ resource "azurerm_virtual_machine_scale_set" "web_sever" {
     os_profile {
         computer_name_prefix    = local.web_server_name
         admin_username          = "webserver"
-        admin_password          = "Passw0rd1234"
+        admin_password          = var.a_strong_pw
     }
 
     os_profile_windows_config {

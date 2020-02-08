@@ -3,6 +3,7 @@ variable "subscription_id" {}
 variable "client_id" {}
 variable "client_secret" {}
 variable "tenant_id" {}
+variable "a_strong_pw" {}
 # Environment vars END
 
 variable "web_server_rg" {}
@@ -37,6 +38,7 @@ module "location_us2w" {
     web_server_subnets          = ["1.0.1.0/24", "1.0.2.0/24"]
     domain_name_label           = var.domain_name_label
     terraform_script_version    = var.terraform_script_version
+    a_strong_pw                 = var.a_strong_pw
 }
 
 module "location_eu1w" {
@@ -52,6 +54,7 @@ module "location_eu1w" {
     web_server_subnets          = ["2.0.1.0/24", "2.0.2.0/24"]
     domain_name_label           = var.domain_name_label
     terraform_script_version    = var.terraform_script_version
+    a_strong_pw                 = var.a_strong_pw
 }
 
 resource "azurerm_traffic_manager_profile" "traffic_manager" {
@@ -144,3 +147,73 @@ resource "azurerm_virtual_network_peering" "web_eu1w_peer_jump_server" {
     depends_on                      = [azurerm_subnet.jump_server_subnet] # Same as above
 }
 
+resource "azurerm_network_interface" "jump_server_nic" {
+  name                      = "${var.jump_server_name}-nic"
+  location                  = "${var.jump_server_location}"
+  resource_group_name       = "${azurerm_resource_group.jump_server_rg.name}"
+  network_security_group_id = "${azurerm_network_security_group.jump_server_nsg.id}"
+
+  ip_configuration {
+    name                          = "${var.jump_server_name}-ip"
+    subnet_id                     = "${azurerm_subnet.jump_server_subnet.id}"
+    private_ip_address_allocation = "dynamic"
+    public_ip_address_id          = "${azurerm_public_ip.jump_server_public_ip.id}"
+  }
+}
+
+resource "azurerm_public_ip" "jump_server_public_ip" {
+  name                         = "${var.jump_server_name}-public-ip"
+  location                     = "${var.jump_server_location}"
+  resource_group_name          = "${azurerm_resource_group.jump_server_rg.name}"
+  public_ip_address_allocation = "${var.environment == "production" ? "static" : "dynamic"}"
+}
+
+resource "azurerm_network_security_group" "jump_server_nsg" {
+  name                = "${var.jump_server_name}-nsg"
+  location            = "${var.jump_server_location}"
+  resource_group_name = "${azurerm_resource_group.jump_server_rg.name}" 
+}
+
+resource "azurerm_network_security_rule" "jump_server_nsg_rule_rdp" {
+  name                        = "RDP Inbound"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "3389"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = "${azurerm_resource_group.jump_server_rg.name}" 
+  network_security_group_name = "${azurerm_network_security_group.jump_server_nsg.name}" 
+}
+
+resource "azurerm_virtual_machine" "jump_server" {
+  name                         = "${var.jump_server_name}"
+  location                     = "${var.jump_server_location}"
+  resource_group_name          = "${azurerm_resource_group.jump_server_rg.name}"  
+  network_interface_ids        = ["${azurerm_network_interface.jump_server_nic.id}"]
+  vm_size                      = "Standard_B1s"
+
+  storage_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2016-Datacenter"
+    version   = "latest"
+  }
+
+  storage_os_disk {
+    name              = "${var.jump_server_name}-os"    
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+  
+  os_profile {
+    computer_name      = "${var.jump_server_name}" 
+    admin_username     = "jumpserver"
+    admin_password     = var.a_strong_pw
+  }
+
+  os_profile_windows_config {}
+}
