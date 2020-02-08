@@ -10,4 +10,12 @@ pr:
       - '*'
 
 stages:
-  - 
+  - stage: Terraform
+    jobs:
+      - job: Install
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: terraformInstaller@0
+            inputs:
+              terraformVersion: '0.12.13'
