@@ -225,4 +225,4 @@ resource "azurerm_virtual_machine" "jump_server" {
   }
 
   os_profile_windows_config {}
-}git remote add origin https://github.com/sigurdfalk/learning-tf.git
+}
