@@ -28,6 +28,7 @@ stages:
               backendAzureRmStorageAccountName: 'tfstate71ac2932'
               backendAzureRmContainerName: 'tfstate'
               backendAzureRmKey: terraform.tfstate
+              commandOptions: -var 'a_strong_pw=$(TF_VAR_a_strong_pw)'
           - task: TerraformTaskV1@0
             inputs:
               command: plan
