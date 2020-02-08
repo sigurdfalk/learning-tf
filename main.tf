@@ -12,6 +12,9 @@ variable "environment" {}
 variable "web_server_count" {}
 variable "terraform_script_version" {}
 variable "domain_name_label" {}
+variable "jump_server_location" {}
+variable "jump_server_prefix" {}
+variable "jump_server_name" {}
 
 provider "azurerm" {
     version         = "=1.43.0"
@@ -57,7 +60,7 @@ resource "azurerm_traffic_manager_profile" "traffic_manager" {
     traffic_routing_method  = "Weighted"
 
     dns_config {
-        relative_name   = var.domain_name_label # Must be unique within Azure (global) 
+        relative_name   = "sigurd-${var.domain_name_label}" # Must be unique within Azure (global) 
         ttl             = 100
     }
 
@@ -85,3 +88,59 @@ resource "azurerm_traffic_manager_endpoint" "traffic_manager_eu1w" {
     type                    = "azureEndpoints"
     weight                  = 100
 }
+
+resource "azurerm_resource_group" "jump_server_rg" {
+    name        = "${var.jump_server_prefix}-rg"
+    location    =  var.jump_server_location
+}
+
+resource "azurerm_virtual_network" "jump_server_vnet" {
+    name                = "${var.jump_server_prefix}-vnet"
+    location            =  var.jump_server_location
+    resource_group_name = azurerm_resource_group.jump_server_rg.name
+    address_space       = ["3.0.0.0/24"]
+}
+
+resource "azurerm_subnet" "jump_server_subnet" {
+    name                    = "${var.jump_server_prefix}-3.0.0.0-subnet"
+    resource_group_name     = azurerm_resource_group.jump_server_rg.name
+    virtual_network_name    = azurerm_virtual_network.jump_server_vnet.name
+    address_prefix          = "3.0.0.0/24"
+}
+
+resource "azurerm_virtual_network_peering" "jump_server_peer_web_us2w" {
+    name                            = "jump-eu1w-peer-web-us2w"
+    resource_group_name             = azurerm_resource_group.jump_server_rg.name
+    virtual_network_name            = azurerm_virtual_network.jump_server_vnet.name
+    remote_virtual_network_id       = module.location_us2w.web_server_vnet_id
+    allow_virtual_network_access    = true
+    depends_on                      = [azurerm_subnet.jump_server_subnet] # Subnet creation has indirect dependency on vnet. Peering also has indirect dependency on vnet.
+}
+
+resource "azurerm_virtual_network_peering" "web_us2w_peer_jump_server" {
+    name                            = "web-us2w-peer-jump-eu1w"
+    resource_group_name             = module.location_us2w.web_server_rg_name
+    virtual_network_name            = module.location_us2w.web_server_vnet_name
+    remote_virtual_network_id       = azurerm_virtual_network.jump_server_vnet.id
+    allow_virtual_network_access    = true
+    depends_on                      = [azurerm_subnet.jump_server_subnet] # Same as above
+}
+
+resource "azurerm_virtual_network_peering" "jump_server_peer_web_eu1w" {
+    name                            = "jump-eu1w-peer-web-eu1w"
+    resource_group_name             = azurerm_resource_group.jump_server_rg.name
+    virtual_network_name            = azurerm_virtual_network.jump_server_vnet.name
+    remote_virtual_network_id       = module.location_eu1w.web_server_vnet_id
+    allow_virtual_network_access    = true
+    depends_on                      = [azurerm_subnet.jump_server_subnet] # Same as above
+}
+
+resource "azurerm_virtual_network_peering" "web_eu1w_peer_jump_server" {
+    name                            = "web-eu1w-peer-jump-eu1w"
+    resource_group_name             = module.location_eu1w.web_server_rg_name
+    virtual_network_name            = module.location_eu1w.web_server_vnet_name
+    remote_virtual_network_id       = azurerm_virtual_network.jump_server_vnet.id
+    allow_virtual_network_access    = true
+    depends_on                      = [azurerm_subnet.jump_server_subnet] # Same as above
+}
+
