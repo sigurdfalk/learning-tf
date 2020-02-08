@@ -23,7 +23,7 @@ stages:
           - task: TerraformTaskV1@0
             inputs:
               backendServiceArm: '$(azure_subscription)'
-              workingDirectory: '$(Build.ArtifactStagingDirectory)'
+              #workingDirectory: '$(Build.ArtifactStagingDirectory)'
               backendAzureRmResourceGroupName: 'tfstate'
               backendAzureRmStorageAccountName: 'tfstate71ac2932'
               backendAzureRmContainerName: 'tfstate'
@@ -31,6 +31,6 @@ stages:
           - task: TerraformTaskV1@0
             inputs:
               command: plan
-              workingDirectory: '$(Build.ArtifactStagingDirectory)'
+              #workingDirectory: '$(Build.ArtifactStagingDirectory)'
               environmentServiceNameAzureRM: '$(azure_subscription)'
           
