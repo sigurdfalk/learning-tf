@@ -17,6 +17,15 @@ variable "jump_server_location" {}
 variable "jump_server_prefix" {}
 variable "jump_server_name" {}
 
+terraform {
+  backend "azurerm" {
+    resource_group_name   = "tfstate"
+    storage_account_name  = "tfstate71ac2932"
+    container_name        = "tfstate"
+    key                   = "terraform.tfstate"
+  }
+}
+
 provider "azurerm" {
     version         = "=1.43.0"
     client_id       = var.client_id
