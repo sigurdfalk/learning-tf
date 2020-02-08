@@ -1,4 +1,5 @@
 trigger:
+
   batch: true
   branches:
     include:
@@ -19,3 +20,18 @@ stages:
           - task: terraformInstaller@0
             inputs:
               terraformVersion: '0.12.13'
+          - task: TerraformTaskV1@0
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: $(azure_subscription)
+              backendAzureRmResourceGroupName: 'tfstate'
+              backendAzureRmStorageAccountName: 'tfstate71ac2932'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'terraform.tfstate'
+          - task: TerraformTaskV1@0
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: $(azure_subscription)
+          
