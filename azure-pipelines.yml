@@ -33,5 +33,4 @@ stages:
               command: plan
               #workingDirectory: '$(Build.ArtifactStagingDirectory)'
               environmentServiceNameAzureRM: '$(azure_subscription)'
-              commandOptions: -var 'a_strong_pw=$(TF_VAR_a_strong_pw)'
-          
+              commandOptions: '-var ''a_strong_pw=$(TF_VAR_a_strong_pw)'''
