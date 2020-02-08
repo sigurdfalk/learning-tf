@@ -22,16 +22,15 @@ stages:
               terraformVersion: '0.12.20'
           - task: TerraformTaskV1@0
             inputs:
-              provider: 'azurerm'
-              command: 'init'
-              backendServiceArm: $(azure_subscription)
+              backendServiceArm: '$(azure_subscription)'
+              workingDirectory: '$(Build.ArtifactStagingDirectory)'
               backendAzureRmResourceGroupName: 'tfstate'
               backendAzureRmStorageAccountName: 'tfstate71ac2932'
               backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: 'terraform.tfstate'
+              backendAzureRmKey: terraform.tfstate
           - task: TerraformTaskV1@0
             inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              environmentServiceNameAzureRM: $(azure_subscription)
+              command: plan
+              workingDirectory: '$(Build.ArtifactStagingDirectory)'
+              environmentServiceNameAzureRM: '$(azure_subscription)'
           
