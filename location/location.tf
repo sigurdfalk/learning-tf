@@ -6,7 +6,7 @@ variable "web_server_name" {}
 variable "environment" {}
 variable "web_server_count" {}
 variable "web_server_subnets" {
-    type = "list"
+    type = list
 }
 variable "terraform_script_version" {}
 variable "domain_name_label" {}

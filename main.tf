@@ -158,29 +158,29 @@ resource "azurerm_virtual_network_peering" "web_eu1w_peer_jump_server" {
 
 resource "azurerm_network_interface" "jump_server_nic" {
   name                      = "${var.jump_server_name}-nic"
-  location                  = "${var.jump_server_location}"
-  resource_group_name       = "${azurerm_resource_group.jump_server_rg.name}"
-  network_security_group_id = "${azurerm_network_security_group.jump_server_nsg.id}"
+  location                  = var.jump_server_location
+  resource_group_name       = azurerm_resource_group.jump_server_rg.name
+  network_security_group_id = azurerm_network_security_group.jump_server_nsg.id
 
   ip_configuration {
     name                          = "${var.jump_server_name}-ip"
-    subnet_id                     = "${azurerm_subnet.jump_server_subnet.id}"
+    subnet_id                     = azurerm_subnet.jump_server_subnet.id
     private_ip_address_allocation = "dynamic"
-    public_ip_address_id          = "${azurerm_public_ip.jump_server_public_ip.id}"
+    public_ip_address_id          = azurerm_public_ip.jump_server_public_ip.id
   }
 }
 
 resource "azurerm_public_ip" "jump_server_public_ip" {
   name                         = "${var.jump_server_name}-public-ip"
-  location                     = "${var.jump_server_location}"
-  resource_group_name          = "${azurerm_resource_group.jump_server_rg.name}"
+  location                     = var.jump_server_location
+  resource_group_name          = azurerm_resource_group.jump_server_rg.name
   public_ip_address_allocation = "${var.environment == "production" ? "static" : "dynamic"}"
 }
 
 resource "azurerm_network_security_group" "jump_server_nsg" {
   name                = "${var.jump_server_name}-nsg"
-  location            = "${var.jump_server_location}"
-  resource_group_name = "${azurerm_resource_group.jump_server_rg.name}" 
+  location            = var.jump_server_location
+  resource_group_name = azurerm_resource_group.jump_server_rg.name 
 }
 
 resource "azurerm_network_security_rule" "jump_server_nsg_rule_rdp" {
@@ -193,15 +193,15 @@ resource "azurerm_network_security_rule" "jump_server_nsg_rule_rdp" {
   destination_port_range      = "3389"
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
-  resource_group_name         = "${azurerm_resource_group.jump_server_rg.name}" 
-  network_security_group_name = "${azurerm_network_security_group.jump_server_nsg.name}" 
+  resource_group_name         = azurerm_resource_group.jump_server_rg.name
+  network_security_group_name = azurerm_network_security_group.jump_server_nsg.name
 }
 
 resource "azurerm_virtual_machine" "jump_server" {
-  name                         = "${var.jump_server_name}"
-  location                     = "${var.jump_server_location}"
-  resource_group_name          = "${azurerm_resource_group.jump_server_rg.name}"  
-  network_interface_ids        = ["${azurerm_network_interface.jump_server_nic.id}"]
+  name                         = var.jump_server_name
+  location                     = var.jump_server_location
+  resource_group_name          = azurerm_resource_group.jump_server_rg.name  
+  network_interface_ids        = [azurerm_network_interface.jump_server_nic.id]
   vm_size                      = "Standard_B1s"
 
   storage_image_reference {
@@ -219,10 +219,10 @@ resource "azurerm_virtual_machine" "jump_server" {
   }
   
   os_profile {
-    computer_name      = "${var.jump_server_name}" 
+    computer_name      = var.jump_server_name
     admin_username     = "jumpserver"
     admin_password     = var.a_strong_pw
   }
 
   os_profile_windows_config {}
-}git remote add origin https://github.com/sigurdfalk/learning-tf.git
+}
