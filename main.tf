@@ -1,8 +1,4 @@
 # Environment vars START
-variable "subscription_id" {}
-variable "client_id" {}
-variable "client_secret" {}
-variable "tenant_id" {}
 variable "a_strong_pw" {}
 # Environment vars END
 
@@ -25,16 +21,6 @@ terraform {
     key                   = "terraform.tfstate"
   }
 }
-
-/*
-provider "azurerm" {
-    version         = "=1.43.0"
-    client_id       = var.client_id
-    client_secret   = var.client_secret
-    tenant_id       = var.tenant_id
-    subscription_id = var.subscription_id
-}
-*/
 
 module "location_us2w" {
     source = "./location"
