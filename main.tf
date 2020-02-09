@@ -162,7 +162,7 @@ resource "azurerm_public_ip" "jump_server_public_ip" {
   name                         = "${var.jump_server_name}-public-ip"
   location                     = var.jump_server_location
   resource_group_name          = azurerm_resource_group.jump_server_rg.name
-  public_ip_address_allocation = "${var.environment == "production" ? "static" : "dynamic"}"
+  public_ip_address_allocation = var.environment == "production" ? "static" : "dynamic"
 }
 
 resource "azurerm_network_security_group" "jump_server_nsg" {
