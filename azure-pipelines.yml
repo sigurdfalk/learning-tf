@@ -42,3 +42,6 @@ stages:
               command: 'apply'
               provider: 'azurerm'
               environmentServiceNameAzureRM: '$(azure_subscription)'
+              commandOptions: >-
+                -var a_strong_pw='$(a_strong_pw)'
+                -input=false
