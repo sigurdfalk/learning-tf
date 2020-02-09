@@ -13,7 +13,7 @@ pr:
 stages:
   - stage: Terraform
     jobs:
-      - job: Install
+      - job: ApplyTFConfig
         pool:
           vmImage: 'ubuntu-latest'
         steps:
@@ -28,13 +28,17 @@ stages:
               backendAzureRmResourceGroupName: 'tfstate'
               backendAzureRmStorageAccountName: 'tfstate71ac2932'
               backendAzureRmContainerName: 'tfstate'
-              backendAzureRmKey: terraform.tfstate
+              backendAzureRmKey: 'terraform.tfstate'
           - task: TerraformTaskV1@0
             inputs:
-              command: plan
+              command: 'plan'
               provider: 'azurerm'
               environmentServiceNameAzureRM: '$(azure_subscription)'
               commandOptions: >-
                 -var a_strong_pw='$(a_strong_pw)'
                 -input=false
-              
+          - task: TerraformTaskV1@0
+            inputs:
+              command: 'apply'
+              provider: 'azurerm'
+              environmentServiceNameAzureRM: '$(azure_subscription)'
