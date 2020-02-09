@@ -24,10 +24,10 @@ stages:
               command: 'init'
               provider: 'azurerm'
               backendServiceArm: '$(azure_subscription)'
-              #backendAzureRmResourceGroupName: 'tfstate'
+              backendAzureRmResourceGroupName: 'tfstate'
               backendAzureRmStorageAccountName: 'tfstate71ac2932'
-              #backendAzureRmContainerName: 'tfstate'
-              #backendAzureRmKey: 'terraform.tfstate'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'terraform.tfstate'
           - task: TerraformTaskV1@0
             inputs:
               command: 'plan'
