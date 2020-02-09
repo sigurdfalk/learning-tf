@@ -22,6 +22,10 @@ terraform {
   }
 }
 
+provider "azurerm" {
+    version         = "=1.43.0"
+}
+
 module "location_us2w" {
     source = "./location"
     
