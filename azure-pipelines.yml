@@ -26,6 +26,7 @@ stages:
                 ls
                 GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
                 ls
+                echo $GOPATH
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
