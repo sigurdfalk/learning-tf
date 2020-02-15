@@ -23,8 +23,9 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
+                ls
                 GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
-                terraform-docs markdown .
+                ls
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
