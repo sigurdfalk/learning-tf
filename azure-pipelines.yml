@@ -16,6 +16,9 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
+          - task: Go@0
+            inputs:
+              command: 'get'
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
