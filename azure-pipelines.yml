@@ -19,6 +19,12 @@ stages:
           - task: GoTool@0
             inputs:
               version: '1.13.5'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                GO111MODULE="off" go get github.com/segmentio/terraform-docs@v0.8.2
+                terraform-docs markdown .
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
