@@ -23,8 +23,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                GO111MODULE=auto go get github.com/segmentio/terraform-docs@v0.8.2
-                echo $GOPATH
+                GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
                 terraform-docs markdown .
           - task: TerraformInstaller@0
             inputs:
