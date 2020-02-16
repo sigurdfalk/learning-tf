@@ -16,6 +16,8 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
+          - checkout: self
+            clean: true
           - task: GoTool@0
             inputs:
               version: '1.13.8'
