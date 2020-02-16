@@ -14,7 +14,7 @@ variable "a_strong_pw" {}
 
 locals {
   web_server_name   = var.environment == "production" ? "${var.web_server_name}-prd" : "${var.web_server_name}-dev"
-  build_environment = var.environment == "production" ? "prod" : "dev"
+    build_environment = var.environment == "production" ? "production" : "development"
 }
 
 resource "azurerm_resource_group" "web_server_rg" {
