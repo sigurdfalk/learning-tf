@@ -18,6 +18,7 @@ stages:
         steps:
           - checkout: self
             clean: true
+            persistCredentials: true
           - task: GoTool@0
             inputs:
               version: '1.13.8'
@@ -31,7 +32,7 @@ stages:
                 cat DOCS.md
                 git add DOCS.md
                 git commit -m "[docs] update DOCS.md"
-                git push
+                git push origin
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
