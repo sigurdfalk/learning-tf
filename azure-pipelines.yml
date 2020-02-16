@@ -24,7 +24,9 @@ stages:
               targetType: 'inline'
               script: |
                 GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
-                $(go env GOPATH)/bin/terraform-docs markdown .
+                $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
+                ls
+                cat DOCS.md
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
