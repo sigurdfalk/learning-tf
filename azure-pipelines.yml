@@ -34,7 +34,7 @@ stages:
                 git config --global user.name "test"
                 git add DOCS.md
                 git commit -m "[docs] update DOCS.md"
-                git push origin
+                git push
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
