@@ -33,7 +33,7 @@ stages:
                 git config --global user.email test@test.no
                 git config --global user.name "test"
 
-                ECHO SOURCE BRANCH IS %BUILD_SOURCEBRANCH%
+                echo SOURCE BRANCH IS %BUILD_SOURCEBRANCH%
 
                 git status
                 git add DOCS.md
