@@ -44,10 +44,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                terraform fmt -recursive -diff .
-                git add .
-                git commit -m "[ci skip] terraform fmt"
-                git push origin HEAD:$(Build.SourceBranchName)
+                terraform fmt -check -recursive -diff .
           - task: TerraformTaskV1@0
             inputs:
               command: 'init'
