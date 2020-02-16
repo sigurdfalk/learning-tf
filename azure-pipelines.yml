@@ -33,7 +33,7 @@ stages:
                 git config --global user.email test@test.no
                 git config --global user.name "test"
 
-                echo SOURCE BRANCH IS $Build.SourceBranch
+                echo SOURCE BRANCH IS $(Build.SourceBranch)
 
                 git status
                 git add DOCS.md
