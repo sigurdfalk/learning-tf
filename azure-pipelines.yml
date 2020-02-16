@@ -33,12 +33,12 @@ stages:
                 git config --global user.email test@test.no
                 git config --global user.name "test"
 
-                echo SOURCE BRANCH IS $(Build.SourceBranch)
+                echo SOURCE BRANCH IS $(Build.SourceBranchName)
 
                 git status
                 git add DOCS.md
                 git commit -m "[docs] update DOCS.md"
-                git push origin
+                git push origin HEAD:$(Build.SourceBranchName)
                 git status
           - task: TerraformInstaller@0
             inputs:
