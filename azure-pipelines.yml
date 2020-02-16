@@ -32,7 +32,6 @@ stages:
           - task: Bash@3
             inputs:
               targetType: 'inline'
-              failOnStderr: true
               script: |
                 GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
                 $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
