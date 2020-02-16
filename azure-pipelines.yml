@@ -19,6 +19,13 @@ stages:
           - checkout: self
             clean: true
             persistCredentials: true
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              failOnStderr: true
+              script: |
+                git config --global user.email pipelines@gjensidige.no
+                git config --global user.name "Azure DevOps Pipelines"
           - task: GoTool@0
             inputs:
               version: '1.13.8'
@@ -28,21 +35,18 @@ stages:
               script: |
                 GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
                 $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
-                ls
-                cat DOCS.md
-                git config --global user.email pipelines@gjensidige.no
-                git config --global user.name "Azure DevOps Pipelines"
-
-                echo SOURCE BRANCH IS $(Build.SourceBranchName)
-
-                git status
                 git add DOCS.md
                 git commit -m "[ci skip] Update DOCS.md"
                 git push origin HEAD:$(Build.SourceBranchName)
-                git status
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              failOnStderr: true
+              script: |
+                terraform fmt -check -recursive -diff .
           - task: TerraformTaskV1@0
             inputs:
               command: 'init'
