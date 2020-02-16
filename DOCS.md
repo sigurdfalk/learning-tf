@@ -16,7 +16,6 @@
 | jump\_server\_prefix | n/a | `any` | n/a | yes |
 | resource\_prefix | n/a | `any` | n/a | yes |
 | terraform\_script\_version | n/a | `any` | n/a | yes |
-| test\_var | n/a | `any` | n/a | yes |
 | web\_server\_count | n/a | `any` | n/a | yes |
 | web\_server\_name | n/a | `any` | n/a | yes |
 | web\_server\_rg | n/a | `any` | n/a | yes |
