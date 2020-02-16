@@ -32,9 +32,14 @@ stages:
                 cat DOCS.md
                 git config --global user.email test@test.no
                 git config --global user.name "test"
+
+                ECHO SOURCE BRANCH IS %BUILD_SOURCEBRANCH%
+
+                git status
                 git add DOCS.md
                 git commit -m "[docs] update DOCS.md"
-                git push
+                git push origin
+                git status
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
