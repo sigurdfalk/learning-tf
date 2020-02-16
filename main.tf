@@ -12,7 +12,6 @@ variable "domain_name_label" {}
 variable "jump_server_location" {}
 variable "jump_server_prefix" {}
 variable "jump_server_name" {}
-variable "test_var" {}
 
 terraform {
   backend "azurerm" {}
@@ -35,7 +34,7 @@ module "location_us2w" {
   web_server_subnets       = ["1.0.1.0/24", "1.0.2.0/24"]
   domain_name_label        = var.domain_name_label
   terraform_script_version = var.terraform_script_version
-    a_strong_pw              = var.a_strong_pw
+  a_strong_pw              = var.a_strong_pw
 }
 
 module "location_eu1w" {
