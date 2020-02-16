@@ -64,6 +64,7 @@ stages:
               commandOptions: >-
                 -var a_strong_pw='$(a_strong_pw)'
                 -input=false
+                -out=./tfplan
           - task: TerraformTaskV1@0
             inputs:
               command: 'apply'
@@ -72,3 +73,4 @@ stages:
               commandOptions: >-
                 -var a_strong_pw='$(a_strong_pw)'
                 -input=false
+                ./tfplan
