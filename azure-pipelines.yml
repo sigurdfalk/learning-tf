@@ -30,8 +30,8 @@ stages:
                 $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
                 ls
                 cat DOCS.md
-                git config --global user.email test@test.no
-                git config --global user.name "test"
+                git config --global user.email pipelines@gjensidige.no
+                git config --global user.name "Azure DevOps Pipelines"
 
                 echo SOURCE BRANCH IS $(Build.SourceBranchName)
 
