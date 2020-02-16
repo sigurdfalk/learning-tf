@@ -27,6 +27,9 @@ stages:
                 $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
                 ls
                 cat DOCS.md
+                git add DOCS.md
+                git commit -m "[docs] update DOCS.md"
+                git push
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
