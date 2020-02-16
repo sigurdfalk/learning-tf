@@ -30,6 +30,8 @@ stages:
                 $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
                 ls
                 cat DOCS.md
+                git config --global user.email test@test.no
+                git config --global user.name "test
                 git add DOCS.md
                 git commit -m "[docs] update DOCS.md"
                 git push origin
