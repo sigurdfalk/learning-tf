@@ -37,7 +37,7 @@ stages:
 
                 git status
                 git add DOCS.md
-                git commit -m "[docs] update DOCS.md"
+                git commit -m "[ci skip] Update DOCS.md"
                 git push origin HEAD:$(Build.SourceBranchName)
                 git status
           - task: TerraformInstaller@0
