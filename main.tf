@@ -53,6 +53,7 @@ resource "azurerm_key_vault" "sigurds_key_vault" {
 
     secret_permissions = [
       "get",
+      "set",
       "list",
     ]
 
