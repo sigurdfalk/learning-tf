@@ -21,9 +21,19 @@ provider "azurerm" {
     version         = "=1.43.0"
 }
 
+resource "azurerm_resource_group" "key_vault_rg" {
+    name        = "key-valut-rg"
+    location    = "westus2"
+
+    tags = {
+        environment = var.environment
+        version     = var.terraform_script_version
+    }
+}
+
 module "location_us2w" {
     source = "./location"
-    
+
     web_server_location         = "westus2"
     web_server_rg               = "${var.web_server_rg}-us2w"
     resource_prefix             = "${var.resource_prefix}-us2w"
@@ -39,7 +49,7 @@ module "location_us2w" {
 
 module "location_eu1w" {
     source = "./location"
-    
+
     web_server_location         = "westeurope"
     web_server_rg               = "${var.web_server_rg}-eu1w"
     resource_prefix             = "${var.resource_prefix}-eu1w"
@@ -59,7 +69,7 @@ resource "azurerm_traffic_manager_profile" "traffic_manager" {
     traffic_routing_method  = "Weighted"
 
     dns_config {
-        relative_name   = "sigurd-${var.domain_name_label}" # Must be unique within Azure (global) 
+        relative_name   = "sigurd-${var.domain_name_label}" # Must be unique within Azure (global)
         ttl             = 100
     }
 
@@ -167,7 +177,7 @@ resource "azurerm_public_ip" "jump_server_public_ip" {
 resource "azurerm_network_security_group" "jump_server_nsg" {
   name                = "${var.jump_server_name}-nsg"
   location            = var.jump_server_location
-  resource_group_name = azurerm_resource_group.jump_server_rg.name 
+  resource_group_name = azurerm_resource_group.jump_server_rg.name
 }
 
 resource "azurerm_network_security_rule" "jump_server_nsg_rule_rdp" {
@@ -187,7 +197,7 @@ resource "azurerm_network_security_rule" "jump_server_nsg_rule_rdp" {
 resource "azurerm_virtual_machine" "jump_server" {
   name                         = var.jump_server_name
   location                     = var.jump_server_location
-  resource_group_name          = azurerm_resource_group.jump_server_rg.name  
+  resource_group_name          = azurerm_resource_group.jump_server_rg.name
   network_interface_ids        = [azurerm_network_interface.jump_server_nic.id]
   vm_size                      = "Standard_B1s"
 
@@ -199,12 +209,12 @@ resource "azurerm_virtual_machine" "jump_server" {
   }
 
   storage_os_disk {
-    name              = "${var.jump_server_name}-os"    
+    name              = "${var.jump_server_name}-os"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
-  
+
   os_profile {
     computer_name      = var.jump_server_name
     admin_username     = "jumpserver"
