@@ -33,7 +33,7 @@ resource "azurerm_resource_group" "key_vault_rg" {
 }
 
 resource "azurerm_key_vault" "sigurds_key_vault" {
-  name                        = "testvault"
+  name                        = "sigurds-testvault"
   location                    = azurerm_resource_group.key_vault_rg.location
   resource_group_name         = azurerm_resource_group.key_vault_rg.name
   enabled_for_disk_encryption = true
