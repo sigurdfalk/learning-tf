@@ -16,9 +16,37 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              failOnStderr: true
+              script: |
+                git config --global user.email pipelines@gjensidige.no
+                git config --global user.name "Azure DevOps Pipelines"
+          - task: GoTool@0
+            inputs:
+              version: '1.13.8'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: |
+                GO111MODULE=on go get github.com/segmentio/terraform-docs@v0.8.2
+                $(go env GOPATH)/bin/terraform-docs markdown . > DOCS.md
+                git add DOCS.md
+                git commit -m "[ci skip] Update DOCS.md"
+                git push origin HEAD:$(Build.SourceBranchName)
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: '0.12.20'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              failOnStderr: true
+              script: |
+                terraform fmt -check -recursive -diff .
           - task: TerraformTaskV1@0
             inputs:
               command: 'init'
@@ -36,11 +64,12 @@ stages:
               commandOptions: >-
                 -var a_strong_pw='$(a_strong_pw)'
                 -input=false
+                -out=./tfplan
           - task: TerraformTaskV1@0
             inputs:
               command: 'apply'
               provider: 'azurerm'
               environmentServiceNameAzureRM: '$(azure_subscription)'
               commandOptions: >-
-                -var a_strong_pw='$(a_strong_pw)'
                 -input=false
+                ./tfplan
