@@ -65,6 +65,7 @@ resource "azurerm_key_vault" "sigurds_key_vault" {
   network_acls {
     default_action = "Deny"
     bypass         = "AzureServices"
+    ip_rules       = ["139.112.164.36"]
   }
 
   tags = {
