@@ -22,13 +22,13 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "key_vault_rg" {
-    name        = "key-valut-rg"
-    location    = "westus2"
+  name     = "key-valut-rg"
+  location = "westus2"
 
-    tags = {
-        environment = var.environment
-        version     = var.terraform_script_version
-    }
+  tags = {
+    environment = var.environment
+    version     = var.terraform_script_version
+  }
 }
 
 module "location_us2w" {
