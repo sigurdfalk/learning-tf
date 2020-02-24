@@ -63,6 +63,7 @@ stages:
               environmentServiceNameAzureRM: '$(azure_subscription)'
               commandOptions: >-
                 -var a_strong_pw='$(a_strong_pw)'
+                -var tenant_id=$(tenant_id)
                 -input=false
                 -out=./tfplan
           - task: TerraformTaskV1@0
