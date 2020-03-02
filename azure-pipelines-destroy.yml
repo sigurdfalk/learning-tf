@@ -15,6 +15,15 @@ stages:
               terraformVersion: '0.12.20'
           - task: TerraformTaskV1@0
             inputs:
+              command: 'init'
+              provider: 'azurerm'
+              backendServiceArm: '$(azure_subscription)'
+              backendAzureRmResourceGroupName: 'tfstate'
+              backendAzureRmStorageAccountName: 'tfstate71ac2932'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'terraform.tfstate'
+          - task: TerraformTaskV1@0
+            inputs:
               command: 'destroy'
               provider: 'azurerm'
               environmentServiceNameAzureRM: '$(azure_subscription)'
