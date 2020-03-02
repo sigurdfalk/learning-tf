@@ -1,0 +1,22 @@
+trigger: none
+
+stages:
+  - stage: Terraform
+    jobs:
+      - job: ApplyTFConfig
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: self
+            clean: true
+            persistCredentials: true
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: '0.12.20'
+          - task: TerraformTaskV1@0
+            inputs:
+              command: 'destroy'
+              provider: 'azurerm'
+              environmentServiceNameAzureRM: '$(azure_subscription)'
+              commandOptions: >-
+                -auto-approve
