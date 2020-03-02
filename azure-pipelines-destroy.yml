@@ -30,3 +30,5 @@ stages:
               commandOptions: >-
                 -auto-approve
                 -input=false
+                -var a_strong_pw='$(a_strong_pw)'
+                -var tenant_id=$(tenant_id)
