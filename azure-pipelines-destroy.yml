@@ -29,3 +29,4 @@ stages:
               environmentServiceNameAzureRM: '$(azure_subscription)'
               commandOptions: >-
                 -auto-approve
+                -input=false
